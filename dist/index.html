@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="normalize.css">
+    <link href="assets/css/fontawesome.css" rel="stylesheet">
+    <link href="assets/css/brands.css" rel="stylesheet">
+    <link href="assets/css/solid.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="content">
+        <header>
+            <p>life rpg</p>
+            <button type="button" id="plus-button">+</button>
+        </header>
+
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="dates">
+                    <p><i class="fa-solid fa-calendar"></i>Today</p>
+                    <p><i class="fa-solid fa-calendar-days"></i>Upcoming</p>
+                </div>
+                <p><b>Projects</b></p>
+            </div>
+            <div class="project-list">
+                <div class="projects-list-title">
+                    <h2>Tasks</h2>
+                </div>
+
+                <div class="boxes-container" id="boxes">
+                    <div class="box">
+                        <div class="schedule-title">
+                            <p id="schedule-title-id"><b>name of the schedule</b></p>
+                        </div>
+                        <div class="schedule-details">
+                            <p id="description">description:</p>
+                            <p id="description-text"></p>
+                            <p id="due-date">due date:</p>
+                            <p id="due-date-text"></p>
+                            <p id="priority">priority:</p>
+                            <p id="priority-text"></p>
+                            <p id="notes">notes:</p>
+                            <p id="notes-text"></p>
+                        </div>
+                    </div>
+                </div>            
+            </div>
+        </div>
+
+        <div id="input-form">
+            <div id="new-task"><h2 id="close-btn">X</h2><h2 id="newtask-title">New Task</h2></div>
+            <div id="title-field">
+                <label for="title">title:</label>
+                <input type="text" id="title" name="title">
+            </div>
+            <div id="description-field">
+                <label for="set-description">description:</label>
+                <input type="text"  id="set-description" name="description">
+            </div>
+            <div id="date-field">
+                <label for="duedate">due date:</label>
+                <input type="date" name="duedate" id="duedate">
+            </div>
+            <div id="priority-field">
+                <label for="set-priority">priority:</label>
+                <select name="priority" id="set-priority">
+                    <option value="low">low</option>
+                    <option value="medium">medium</option>
+                    <option value="high">high</option>
+                </select>
+            </div>
+            <div id="notes-field">
+                <label for="note">notes:</label>
+                <textarea name="notes" id="note" cols="30" rows="5"></textarea>
+            </div>
+            <button id="create-btn">Create</button>
+        </div>
+
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
