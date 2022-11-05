@@ -84,21 +84,15 @@ var id = 0;
 
 function hideSibling(sibling){
     sibling.addEventListener('click', () => {
-        if(sibling.nextSibling.style.display == 'none'){
+        if (sibling.nextSibling.style.display === 'none'){
             sibling.nextSibling.style.display = 'grid';
-        } else if (sibling.nextSibling.style.display == 'grid'){
+        } else if (sibling.nextSibling.style.display === 'grid'){
             sibling.nextSibling.style.display = 'none';
         }
     })
 }
 
-function createBoxContent(item){
-    for(var e in item){
-        let a = document.createElement('p');
-        a.textContent = `${item[e]}`
-        boxDividerBottom.appendChild(a);
-    }
-}
+
 
 const createBox = (item) => {
     const boxDiv = document.createElement('div');
@@ -109,8 +103,16 @@ const createBox = (item) => {
     boxDiv.appendChild(boxDividerUp);
     const boxDividerBottom = document.createElement('div');
     boxDividerBottom.className = 'schedule-details';
-    boxDividerBottom.style.display = 'none';
+    boxDividerBottom.style.display = 'grid';
     boxDiv.appendChild(boxDividerBottom);
+
+    function createBoxContent(item){
+        for(var e in item){
+            let a = document.createElement('p');
+            a.textContent = `${item[e]}`
+            boxDividerBottom.appendChild(a);
+        }
+    }   
 
     createBoxContent(item);
     // for(var e in item){
@@ -132,7 +134,6 @@ const createBox = (item) => {
     targetBold.firstChild.style.fontWeight = 'bold';
     id ++;
 }
-
 
 
 createBox(newFactory);
