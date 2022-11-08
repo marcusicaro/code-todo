@@ -25,11 +25,6 @@ header > button {
     cursor: pointer;
 }
 
-.project-list {
-    display: grid;
-    grid-template-rows: 50px auto;
-}
-
 .main-content {
     display: grid;
     grid-template-columns: 300px auto;
@@ -48,6 +43,43 @@ header > button {
 
 .sidebar > p {
     margin: 25px;
+}
+
+.project-bar {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: min-content;
+    grid-template-columns: min-content min-content;
+    justify-content: space-between;
+}
+
+.project-list {
+    padding: 0px;
+}
+
+.project-bar > p {
+    display: grid;
+    align-items: center;
+    margin-left: 25px;
+    /* margin-bottom: 0px; */
+}
+
+.project-list {
+    margin: 0px;
+}
+
+ul > li {
+    margin-left: 25px;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.plus-project {
+    font-size: 25px;
+    margin: 0px 25px 0px 25px;
+    cursor: pointer;
 }
 
 .dates {
@@ -103,7 +135,7 @@ h2#newtask-title {
     margin: 0px;
 }
 
-#input-form > button {
+#input-form > input[type="submit"] {
     justify-self: end;
     height: 2em;
     width: 75px;
@@ -114,14 +146,16 @@ h2#newtask-title {
 	font: inherit;
 	cursor: pointer;
 	outline: inherit;
-    transition: 0.01s;
+    border: 1px solid black;
+    transition: 0.15s;
 }
 
-#input-form > button:active {
+#input-form > input[type="submit"]:active {
     color: black;
     border: 1px solid black;
     background-color: white;
-    transform: scale(99%);
+    /* transform: scale(10%); */
+    transition: 0.01s;
   }
 
 label {
@@ -143,3 +177,54 @@ textarea {
 i {
     margin-right: 5px;
 }
+
+#project-form {
+    display: none;
+    text-align: center;
+    background-color: white;
+    justify-items: center;
+    position: fixed;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px;
+    border: 1px solid black;
+}
+
+#project-form > label {
+    margin-right: 25px;
+}
+
+#close-project-form {
+    margin: 0px;
+    justify-self: end;
+    grid-template-rows: min-content min-content min-content;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#create-project {
+    justify-self: center;
+    height: 2em;
+    width: 75px;
+    background: black;
+    color: antiquewhite;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+    border: 1px solid black;
+    transition: 0.15s;
+    margin-top: 25px;
+
+}
+
+#create-project:active {
+    color: black;
+    border: 1px solid black;
+    background-color: white;
+    /* transform: scale(10%); */
+    transition: 0.01s;
+  }

@@ -1,19 +1,14 @@
 import { format, formatDistance, formatRelative, subDays } from 'date-fns'
 import { addDays, startOfDay } from 'date-fns';
 
-// var date = new Date();
+const dateConvert = (date) => {
 
-// const dateConvert = (date) => {
+const dateFormatted = format(date, 'dd/MM/yyyy')
 
-// const dateFormatted = format(date, 'dd/MM/yyyy')
+return dateFormatted
 
-// console.log(dateFormatted);
+}
 
-// return dateFormatted
-
-// }
-
-// dateConvert(date);
 
 
 class itemFactory {
@@ -26,62 +21,24 @@ class itemFactory {
     }
 };
 
-
-const newFactory = new itemFactory ('asd', 'VERY GOOD DESCRIPTION', 'asdfa', 'asrgge', '12d21d');
-
-const viewItem = (factory) => {
-    for(var e in factory){
-        console.log(factory[e]);
-    }
-}
-viewItem(newFactory);
-
-class project {
-    constructor(){
-        let i = 0;
-        const projectID = i;
-        return i++
-    }
-}
-
-
-    
-
+// add schedule
 const plusButton = document.querySelector('#plus-button');
 plusButton.addEventListener('click', () => {
     document.querySelector('#input-form').style.display = 'grid';
 });
 
-
+// close schedule form 
 const closeButton = document.querySelector('#close-btn');
-closeButton.addEventListener("click", function() {
-    document.querySelector('#input-form').style.display = 'none';
-  });
+function closeForm () {
+    const formClosed = closeButton.parentNode.parentNode.style.display = 'none';
+    return formClosed
+}
 
+closeButton.addEventListener("click", closeForm);
 
-// const createBox = () => {
-//     const boxDiv = document.createElement('div');
-//     boxDiv.className = 'box';
-//     const boxTitle = document.createElement('p');
-//     boxDiv.appendChild(boxTitle);
-//     const boxDescription = document.createElement('p');
-//     boxDiv.appendChild(boxDescription);
-//     const boxDueDate = document.createElement('p');
-//     boxDiv.appendChild(boxDueDate);
-//     const boxPriority = document.createElement('p');
-//     boxDiv.appendChild(boxPriority);
-//     const noteInput = document.createElement('p');
-//     boxDiv.appendChild(noteInput);
-//     };
-
-const boxesContentSelector = document.getElementById('boxes');
-// const p = document.createElement('p');
-// p.innerText = 'asdasd';
-
-
-// console.log(boxContainerSelector);
 var id = 0;
 
+// hide schedule details 
 function hideSibling(sibling){
     sibling.addEventListener('click', () => {
         if (sibling.nextSibling.style.display === 'none'){
@@ -92,8 +49,24 @@ function hideSibling(sibling){
     })
 }
 
+// erase schedule values 
+const eraseValues = () => {
+    const eraseTitle =  document.querySelector('#title').value = '';
+    const eraseDescription = document.querySelector('#set-description').value = '';
+    const eraseDueDate = document.querySelector('#duedate').value = '';
+    const erasePriority = document.querySelector('#set-priority').value = 'low';
+    const eraseNote = document.querySelector('#note').value = '';
+ 
+    return {
+     eraseTitle,
+     eraseDescription,
+     eraseDueDate,
+     erasePriority,
+     eraseNote
+    }
+ }
 
-
+// create schedule box 
 const createBox = (item) => {
     const boxDiv = document.createElement('div');
     boxDiv.setAttribute('id', `${id}`);
@@ -115,41 +88,95 @@ const createBox = (item) => {
     }   
 
     createBoxContent(item);
-    // for(var e in item){
-    //     let a = document.createElement('p');
-    //     a.textContent = `${item[e]}`
-    //     boxDividerBottom.appendChild(a);
-    // }
+
     boxes.appendChild(boxDiv);
     boxDividerUp.appendChild(boxDividerBottom.firstChild);
 
-    // console.log(boxDividerUp.nextElementSibling);
-    // boxDividerUp.nextSibling.style.display = 'none';
+
     hideSibling(boxDividerUp);
-    // boxDividerUp.addEventListener('click', () => {
-    //     boxDividerUp.nextSibling.style.display = 'none';
-    // })
+
 
     let targetBold = document.getElementById(id);
     targetBold.firstChild.style.fontWeight = 'bold';
     id ++;
 }
 
+class manageProject {
 
-createBox(newFactory);
-createBox(newFactory);
+    constructor(){}
+    
+    giveID() {
+        const projectID = 0;
+        return projectID;
+    }
+}
+
+var idOne = new manageProject;
+
 
 const createBtn = document.querySelector('#create-btn');
 createBtn.addEventListener('click', () => {
     const titleInput = document.querySelector('#title').value;
     const descriptionInput = document.querySelector('#set-description').value;
     const dueDateInput = document.querySelector('#duedate').value;
+
+    function dateOperations () {
+        if (dueDateInput !== ''){
+            const newDateFormat = new Date(dueDateInput);
+            const dateFormated = dateConvert(newDateFormat);
+            return dateFormated
+        } else {
+            return ''
+        }
+    }
+
+
+        if (titleInput === ''){
+            alert("Title can't be empty");
+            return
+        }
+
+
+    dateOperations();
+
     const priorityInput = document.querySelector('#set-priority').value;
     const noteInput = document.querySelector('#note').value;
 
-    let newItem = new itemFactory (titleInput, descriptionInput, dueDateInput, priorityInput, noteInput);
+    let newItem = new itemFactory (titleInput, descriptionInput, dateOperations(), priorityInput, noteInput);
 
-    createBox();
+    createBox(newItem);
     
+    eraseValues();
+    closeForm ();
     
 })
+
+
+const projectManage = () => {
+
+    const closeBtnSelect = document.querySelector('#close-project-form');
+    const projectCloseBtn = closeBtnSelect.addEventListener('click', () => {
+        projectForm.style.display = 'none';
+    })
+
+    const projectForm = document.querySelector('#project-form');
+    const projectPlusIconSelect = document.querySelector('.plus-project');
+    const projectPlusIcon = projectPlusIconSelect.addEventListener('click', () => {
+        projectForm.style.display = 'grid';
+        })
+    const createProjectBtn = document.querySelector('#create-project');
+    const createProject = createProjectBtn.addEventListener('click', () => {
+        const projectTextContent = document.querySelector("#project-input");
+        const projectListSelect = document.querySelector('.project-list');
+        const createProjectItem = document.createElement('li');
+        const projectTextContentValue = projectTextContent.value;
+        createProjectItem.textContent = projectTextContentValue;
+        createProjectItem.setAttribute('id', `${projectTextContentValue}`);
+        projectListSelect.appendChild(createProjectItem);
+        projectForm.style.display = 'none';
+    })
+
+    return {projectCloseBtn, projectPlusIcon, createProject}
+}
+
+projectManage()

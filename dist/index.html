@@ -19,14 +19,27 @@
         </header>
 
 
+
+    
         <div class="main-content">
+
+            <!-- sidebar -->
             <div class="sidebar">
                 <div class="dates">
                     <p><i class="fa-solid fa-calendar"></i>Today</p>
                     <p><i class="fa-solid fa-calendar-days"></i>Upcoming</p>
                 </div>
-                <p><b>Projects</b></p>
+                <div class="project-bar">
+                    <p><b>Projects</b></p>
+                    <p class="plus-project">+</p>
+                </div>
+                <ul class="project-list">
+                    <li>Default</li>
+                </ul>
             </div>
+
+
+
             <div class="project-list">
                 <div class="projects-list-title">
                     <h2>Tasks</h2>
@@ -60,7 +73,7 @@
             </div>
             <div id="description-field">
                 <label for="set-description">description:</label>
-                <input type="text"  id="set-description" name="description">
+                <input type="text"  id="set-description" name="description" required>
             </div>
             <div id="date-field">
                 <label for="duedate">due date:</label>
@@ -78,7 +91,15 @@
                 <label for="note">notes:</label>
                 <textarea name="notes" id="note" cols="30" rows="5"></textarea>
             </div>
-            <button id="create-btn">Create</button>
+            <input type="submit" id="create-btn" value="Create">
+        </div>
+
+        <!-- project insert form -->
+        <div id="project-form">
+            <p id="close-project-form">X</p>
+            <label for="project-input"><h2>Insert project title</h2></label>
+            <input type="text" id="project-input">
+            <input type="submit" id="create-project" value="Create">
         </div>
 
     </div>
