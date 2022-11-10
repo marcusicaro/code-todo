@@ -1,6 +1,22 @@
 import { format, formatDistance, formatRelative, subDays } from 'date-fns'
 import { addDays, startOfDay } from 'date-fns';
 
+// DOM selectors 
+const projectTitle = document.querySelector('#current-project-title');
+const sidebarProjectListUl = document.querySelector('.project-list');
+const createProjectBtn = document.querySelector('#create-project');
+const projectFormInput = document.querySelector('#project-input');
+const taskForm = document.querySelector('#input-form');
+const boxContainer = document.querySelector('.boxes-container');
+const taskCreatBtn = document.querySelector('#create-btn');
+const openAddTaskBtn = document.querySelector('#plus-button');
+const closeAddTaskFormBtn = document.querySelector('#close-btn');
+const projectForm = document.querySelector('#project-form');
+const openAddProjectFormBtn = document.querySelector('.plus-project');
+const closeProjectFormBtn = document.querySelector('#close-project-form');
+
+
+// convert date 
 const dateConvert = (date) => {
 
 const dateFormatted = format(date, 'dd/MM/yyyy')
@@ -9,48 +25,243 @@ return dateFormatted
 
 }
 
-
-
+// create task 
 class itemFactory {
-    constructor(title, description, dueDate, priority, notes) {
+    constructor(title, description, dueDate, priority, notes, project) {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
         this.notes = notes;
+        // this.project = project;
     }
 };
 
-// add schedule
-const plusButton = document.querySelector('#plus-button');
-plusButton.addEventListener('click', () => {
-    document.querySelector('#input-form').style.display = 'grid';
+// project class
+class Project {
+    constructor(projectTitle) {
+        this.projectTitle = projectTitle;
+        this.tasks = [];
+    }
+
+    // insert task into project 
+    addTask(newTask) {
+        this.tasks.push(newTask)
+    }
+
+    alreadyExists(newTask) {
+        return this.tasks.some((task) => task.title === newTask.title)
+    }
+};
+
+// create default project 
+const defaultProject = new Project('Default');
+
+// create first task 
+const learnCode = new itemFactory('learn code', 'JavaScript, HTML, CSS', '10/11/2022', 'high', 'already doing it', defaultProject)
+
+// add a first task to default project 
+defaultProject.addTask(learnCode);
+
+// project library class
+class ProjectLibrary {
+    constructor() {
+        this.projects = []
+    }
+
+    // insert project into library
+    addProject(newProject) {
+        if (!this.isInLibrary(newProject)){
+        this.projects.push(newProject)
+        }
+    }
+
+    isInLibrary(newProject){
+        return this.projects.some((project) => project.projectTitle === newProject.projectTitle)
+    }
+};
+
+// create default library
+const defaultLibrary = new ProjectLibrary();
+
+// current project
+const globalCurrentProject = () => {
+    var currentProject = defaultProject;
+}
+
+// add default project to default library
+defaultLibrary.addProject(defaultProject);
+
+// append project to project list 
+
+function appendProjectToProjectList (element) {
+    const createListItem = document.createElement('li');
+    createListItem.style.cursor = 'pointer';
+    
+    createListItem.addEventListener('click', () => {
+        globalCurrentProject.currentProject = element;
+        projectTitle.textContent = element.projectTitle;
+        emptyBoxContainer(); 
+        createTaskFromProjectTasks();
+    })
+
+    createListItem.textContent = element.projectTitle;
+    sidebarProjectListUl.appendChild(createListItem);
+
+    // change the current project to the one being created 
+    globalCurrentProject.currentProject = element;
+
+    // change displayed project text title to this 
+    projectTitle.textContent = element.projectTitle;
+
+    emptyBoxContainer();
+
+}
+
+// append default project to projects list 
+appendProjectToProjectList(defaultProject);
+
+// add project from form 
+createProjectBtn.addEventListener('click', () => {
+    let createNewProject = new Project(projectFormInput.value);
+
+    // checks if name has already been taken 
+    if (defaultLibrary.isInLibrary(createNewProject)){
+        return alert('Project name already exists');
+    }
+    defaultLibrary.addProject(createNewProject);
+    appendProjectToProjectList(createNewProject);
+ 
+    // closes project form 
+    projectForm.style.display = 'none';
+
+    // clear project form input
+    projectFormInput.value = '';
 });
 
-// close schedule form 
-const closeButton = document.querySelector('#close-btn');
+// append task to current project 
+const appendTaskToCurrentProject = (el) => {
+    globalCurrentProject.currentProject.addTask(el)
+}
+
+// convert date 
+const convertDate = (dateElement) => {
+    if (dateElement !== ''){
+        const newDateFormat = new Date(dateElement);
+        const dateFormated = dateConvert(newDateFormat);
+        return dateFormated
+    } else {
+        return ''
+    }
+}
+
+// add task from form to current project
+const createTask = () => {
+    const getTitleInput = document.querySelector('#title').value;
+    const getDescriptionInput = document.querySelector("#set-description").value;
+    const getDueDate = document.querySelector('#duedate').value;
+    const dueDateConverted = convertDate(getDueDate);
+    const getPriorityInput = document.querySelector('#set-priority').value;
+    const getNotesValue = document.querySelector('#note').value;
+
+    // checks for empty title value 
+    if (getTitleInput === ''){
+        return alert('Please insert a title');
+    }
+
+    var newItem = new itemFactory(getTitleInput, getDescriptionInput, dueDateConverted, getPriorityInput, getNotesValue);
+    
+    if (globalCurrentProject.currentProject.alreadyExists(newItem)){
+        return alert('Task name already in use, please choose a different one.');
+    }
+
+    appendTaskToCurrentProject(newItem);
+
+    createTaskVisual(newItem);
+}
+
+// execute task creation and closes task form 
+function formCreateBtn () {
+    createTask();
+
+    // erase task form input values 
+    eraseTaskFormInputValues();
+
+    // closes task form 
+    taskForm.style.display = 'none';
+}
+
+// empty box container 
+function emptyBoxContainer () {
+    boxContainer.innerHTML = '';
+}
+
+
+// create task on current task display 
+const createTaskVisual = (item) => {
+    const taskCard = document.createElement('div');
+    taskCard.classList.add('box'); 
+
+    for(var a in item){
+            if (item[a] !== ''){
+                let b = document.createElement('p');
+                b.textContent = `${item[a]}`
+                if(b.textContent !== '[object Object]') {
+                    taskCard.appendChild(b);
+                }
+        }
+    }
+
+    boxContainer.appendChild(taskCard);
+}
+
+// // create task from project
+const createTaskFromProjectTasks = () => {
+    // console.log(globalCurrentProject.currentProject.tasks[0]);
+    globalCurrentProject.currentProject.tasks.forEach(element => createTaskVisual(element));
+    // for ()
+    // createTaskVisual(globalCurrentProject.currentProject.tasks[0])
+}
+
+// create default task on screen 
+createTaskVisual(defaultProject.tasks[0]);
+
+// remove from display
+function removeFromDisplay (object) {
+    object.style.display = 'none'
+};
+
+// show on screen
+function showOnScreen (something) {
+    something.style.display = 'grid'
+};
+
+// task form create button action 
+taskCreatBtn.addEventListener('click', formCreateBtn);
+
+// open add task form
+openAddTaskBtn.addEventListener('click', () => {
+    taskForm.style.display = 'grid';
+});
+
+// close add task form 
 function closeForm () {
-    const formClosed = closeButton.parentNode.parentNode.style.display = 'none';
+    const formClosed = this.parentNode.style.display = 'none';
     return formClosed
 }
+closeAddTaskFormBtn.addEventListener("click", closeForm);
 
-closeButton.addEventListener("click", closeForm);
+// open project form 
+openAddProjectFormBtn.addEventListener('click', () => {
+    projectForm.style.display = 'grid';
+    });
 
-var id = 0;
+// close project form 
+closeProjectFormBtn.addEventListener('click', closeForm);
 
-// hide schedule details 
-function hideSibling(sibling){
-    sibling.addEventListener('click', () => {
-        if (sibling.nextSibling.style.display === 'none'){
-            sibling.nextSibling.style.display = 'grid';
-        } else if (sibling.nextSibling.style.display === 'grid'){
-            sibling.nextSibling.style.display = 'none';
-        }
-    })
-}
 
-// erase schedule values 
-const eraseValues = () => {
+// erase task form values on inputs
+const eraseTaskFormInputValues = () => {
     const eraseTitle =  document.querySelector('#title').value = '';
     const eraseDescription = document.querySelector('#set-description').value = '';
     const eraseDueDate = document.querySelector('#duedate').value = '';
@@ -64,119 +275,4 @@ const eraseValues = () => {
      erasePriority,
      eraseNote
     }
- }
-
-// create schedule box 
-const createBox = (item) => {
-    const boxDiv = document.createElement('div');
-    boxDiv.setAttribute('id', `${id}`);
-    boxDiv.className = 'box';
-    const boxDividerUp = document.createElement('div');
-    boxDividerUp.className = 'schedule-title';
-    boxDiv.appendChild(boxDividerUp);
-    const boxDividerBottom = document.createElement('div');
-    boxDividerBottom.className = 'schedule-details';
-    boxDividerBottom.style.display = 'grid';
-    boxDiv.appendChild(boxDividerBottom);
-
-    function createBoxContent(item){
-        for(var e in item){
-            let a = document.createElement('p');
-            a.textContent = `${item[e]}`
-            boxDividerBottom.appendChild(a);
-        }
-    }   
-
-    createBoxContent(item);
-
-    boxes.appendChild(boxDiv);
-    boxDividerUp.appendChild(boxDividerBottom.firstChild);
-
-
-    hideSibling(boxDividerUp);
-
-
-    let targetBold = document.getElementById(id);
-    targetBold.firstChild.style.fontWeight = 'bold';
-    id ++;
-}
-
-class manageProject {
-
-    constructor(){}
-    
-    giveID() {
-        const projectID = 0;
-        return projectID;
-    }
-}
-
-var idOne = new manageProject;
-
-
-const createBtn = document.querySelector('#create-btn');
-createBtn.addEventListener('click', () => {
-    const titleInput = document.querySelector('#title').value;
-    const descriptionInput = document.querySelector('#set-description').value;
-    const dueDateInput = document.querySelector('#duedate').value;
-
-    function dateOperations () {
-        if (dueDateInput !== ''){
-            const newDateFormat = new Date(dueDateInput);
-            const dateFormated = dateConvert(newDateFormat);
-            return dateFormated
-        } else {
-            return ''
-        }
-    }
-
-
-        if (titleInput === ''){
-            alert("Title can't be empty");
-            return
-        }
-
-
-    dateOperations();
-
-    const priorityInput = document.querySelector('#set-priority').value;
-    const noteInput = document.querySelector('#note').value;
-
-    let newItem = new itemFactory (titleInput, descriptionInput, dateOperations(), priorityInput, noteInput);
-
-    createBox(newItem);
-    
-    eraseValues();
-    closeForm ();
-    
-})
-
-
-const projectManage = () => {
-
-    const closeBtnSelect = document.querySelector('#close-project-form');
-    const projectCloseBtn = closeBtnSelect.addEventListener('click', () => {
-        projectForm.style.display = 'none';
-    })
-
-    const projectForm = document.querySelector('#project-form');
-    const projectPlusIconSelect = document.querySelector('.plus-project');
-    const projectPlusIcon = projectPlusIconSelect.addEventListener('click', () => {
-        projectForm.style.display = 'grid';
-        })
-    const createProjectBtn = document.querySelector('#create-project');
-    const createProject = createProjectBtn.addEventListener('click', () => {
-        const projectTextContent = document.querySelector("#project-input");
-        const projectListSelect = document.querySelector('.project-list');
-        const createProjectItem = document.createElement('li');
-        const projectTextContentValue = projectTextContent.value;
-        createProjectItem.textContent = projectTextContentValue;
-        createProjectItem.setAttribute('id', `${projectTextContentValue}`);
-        projectListSelect.appendChild(createProjectItem);
-        projectForm.style.display = 'none';
-    })
-
-    return {projectCloseBtn, projectPlusIcon, createProject}
-}
-
-projectManage()
+ };
