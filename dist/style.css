@@ -244,3 +244,20 @@ i {
     /* transform: scale(10%); */
     transition: 0.01s;
   }
+
+.fa-trash {
+    margin: 5px;
+    cursor: pointer;
+}
+
+.project-text-content {
+    display: flex;
+    margin-left: 25px;
+    justify-content: space-between;
+    width: 254px;
+    height: min-content;
+}
+
+li {
+    align-self: center;
+}

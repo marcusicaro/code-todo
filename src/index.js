@@ -33,7 +33,6 @@ class itemFactory {
         this.dueDate = dueDate;
         this.priority = priority;
         this.notes = notes;
-        // this.project = project;
     }
 };
 
@@ -52,13 +51,17 @@ class Project {
     alreadyExists(newTask) {
         return this.tasks.some((task) => task.title === newTask.title)
     }
+    removeTask(projectTitle) {
+        this.tasks = this.tasks.filter(task => task.title !== projectTitle)
+        console.log(this.tasks);
+    }
 };
 
 // create default project 
 const defaultProject = new Project('Default');
 
 // create first task 
-const learnCode = new itemFactory('learn code', 'JavaScript, HTML, CSS', '10/11/2022', 'high', 'already doing it', defaultProject)
+const learnCode = new itemFactory('learn code', 'JavaScript, HTML, CSS', '10/11/2022', 'high', 'already doing it')
 
 // add a first task to default project 
 defaultProject.addTask(learnCode);
@@ -79,6 +82,11 @@ class ProjectLibrary {
     isInLibrary(newProject){
         return this.projects.some((project) => project.projectTitle === newProject.projectTitle)
     }
+
+    removeProject(projectName) {
+        this.projects = this.projects.filter((project) => project.projectTitle !== projectName)
+        console.log(this.projects);
+    }
 };
 
 // create default library
@@ -93,10 +101,24 @@ const globalCurrentProject = () => {
 defaultLibrary.addProject(defaultProject);
 
 // append project to project list 
-
 function appendProjectToProjectList (element) {
+    const projectContentContainer = document.createElement('div');
+    projectContentContainer.className = 'project-text-content'
     const createListItem = document.createElement('li');
     createListItem.style.cursor = 'pointer';
+    const projectTrashCan = document.createElement('i');
+    projectTrashCan.className = 'fa-solid fa-trash';
+    sidebarProjectListUl.appendChild(projectTrashCan);
+
+    projectTrashCan.addEventListener('click', () => {
+        let projectToBeDeletedTitle = projectTrashCan.parentElement.firstChild.textContent;
+        defaultLibrary.removeProject(projectToBeDeletedTitle);
+        projectTrashCan.parentElement.remove();
+        if (projectToBeDeletedTitle === globalCurrentProject.currentProject.projectTitle){
+            projectTitle.innerHTML = '';
+            emptyBoxContainer(); 
+        }
+    })
     
     createListItem.addEventListener('click', () => {
         globalCurrentProject.currentProject = element;
@@ -106,7 +128,10 @@ function appendProjectToProjectList (element) {
     })
 
     createListItem.textContent = element.projectTitle;
-    sidebarProjectListUl.appendChild(createListItem);
+    projectContentContainer.appendChild(createListItem);
+    projectContentContainer.appendChild(projectTrashCan);
+    sidebarProjectListUl.appendChild(projectContentContainer);
+
 
     // change the current project to the one being created 
     globalCurrentProject.currentProject = element;
@@ -212,29 +237,29 @@ const createTaskVisual = (item) => {
         }
     }
 
+    const trashCan = document.createElement('i');
+    trashCan.addEventListener('click', () => {
+    let taskTitle = trashCan.parentElement.firstChild.textContent;
+    // console.log(taskTitle);
+    globalCurrentProject.currentProject.removeTask(taskTitle);
+    trashCan.parentElement.remove();
+
+    });
+    trashCan.className = 'fa-solid fa-trash';
+    taskCard.appendChild(trashCan);
+
+
+
     boxContainer.appendChild(taskCard);
 }
 
 // // create task from project
 const createTaskFromProjectTasks = () => {
-    // console.log(globalCurrentProject.currentProject.tasks[0]);
     globalCurrentProject.currentProject.tasks.forEach(element => createTaskVisual(element));
-    // for ()
-    // createTaskVisual(globalCurrentProject.currentProject.tasks[0])
 }
 
 // create default task on screen 
 createTaskVisual(defaultProject.tasks[0]);
-
-// remove from display
-function removeFromDisplay (object) {
-    object.style.display = 'none'
-};
-
-// show on screen
-function showOnScreen (something) {
-    something.style.display = 'grid'
-};
 
 // task form create button action 
 taskCreatBtn.addEventListener('click', formCreateBtn);
@@ -276,3 +301,111 @@ const eraseTaskFormInputValues = () => {
      eraseNote
     }
  };
+
+//  get today date 
+const todayDate = new Date();
+const todayDateConverted = dateConvert(todayDate);
+
+// // create default project 
+const anothertProject = new Project('Another Project');
+
+// // create first task 
+const anotherTask = new itemFactory('another task', 'TASK DESCRIPTION', '11/11/2022', 'high', 'SOME notes')
+
+// // add a first task to default project 
+defaultProject.addTask(anotherTask);
+
+// // create default library
+// const defaultLibrary = new ProjectLibrary();
+
+// // add default project to default library
+defaultLibrary.addProject(anothertProject);
+
+createTaskVisual(defaultProject.tasks[1]);
+
+appendProjectToProjectList(anothertProject);
+
+const anotherNewTask = new itemFactory('another new task', ' VERY GOOD TASK DESCRIPTION', '14/11/2022', 'high', 'SOME notes');
+
+anothertProject.addTask(anotherNewTask);
+createTaskVisual(anothertProject.tasks[0]);
+
+
+
+// tests if it's equals to today date to show on screen 
+function checkDueDate (c) {
+    if(c.dueDate === todayDateConverted){
+        createTaskVisual(c);
+    }
+}
+
+// loop through tasks 
+const loopThroughTasks = (projectWithTasks) => {
+    projectWithTasks.tasks.forEach(element => checkDueDate(element));
+}
+
+// loop through each project of the projectlibrary 
+const loopThroughProjects = () => {
+    for(var i = 0; i < defaultLibrary.projects.length; i++){
+        loopThroughTasks(defaultLibrary.projects[i]);
+    }
+} 
+
+const todaySelector = document.querySelector('#today');
+const changeTodaySelectorCursor = (() => {return todaySelector.style.cursor = 'pointer';})();
+
+todaySelector.addEventListener('click', function()  {
+    emptyBoxContainer();
+    loopThroughProjects();
+});
+
+// see next week days 
+const nextWeek = ((date) => {
+    const anotherDate = new Date();
+    const today = dateConvert(anotherDate);
+    const dayTwo = dateConvert(addDays(anotherDate, 1));
+    const dayThree = dateConvert(addDays(anotherDate, 2));
+    const dayFour = dateConvert(addDays(anotherDate, 3));
+    const dayFive = dateConvert(addDays(anotherDate, 4));
+    const daySix = dateConvert(addDays(anotherDate, 5));
+    const daySeven = dateConvert(addDays(anotherDate, 6));
+    const dayEigth = dateConvert(addDays(anotherDate, 7));
+
+    return {today, dayTwo, dayThree, dayFour, dayFive, daySix, daySeven, dayEigth}
+
+})();
+
+function checkDueDateNextWeek (c) {
+    if(c.dueDate === nextWeek.today || c.dueDate === nextWeek.dayTwo || c.dueDate === nextWeek.dayThree || c.dueDate === nextWeek.dayFour || 
+        c.dueDate === nextWeek.dayFive || c.dueDate === nextWeek.daySix
+        || c.dueDate === nextWeek.daySeven || c.dueDate === nextWeek.dayEigth){
+        createTaskVisual(c);
+    }
+}
+
+const loopThroughTasksWeek = (projectWithTasks) => {
+    projectWithTasks.tasks.forEach(element => checkDueDateNextWeek(element));
+}
+
+// loop through each project of the projectlibrary 
+const loopThroughProjectsWeek = () => {
+    for(var i = 0; i < defaultLibrary.projects.length; i++){
+        loopThroughTasksWeek(defaultLibrary.projects[i]);
+    }
+} 
+
+
+const upcomingSelector = document.querySelector('#upcoming');
+const changeUpcomingSelectorCursor = (() => {return upcomingSelector.style.cursor = 'pointer';})();
+
+upcomingSelector.addEventListener('click', function()  {
+    emptyBoxContainer();
+    loopThroughProjectsWeek();
+});
+
+
+// console.log(defaultLibrary.projects);
+// defaultLibrary.removeProject("Another Project");
+// console.log(defaultLibrary.projects);
+// defaultProject.removeTask('learn code');
+// console.log(defaultProject.tasks[0].title);
