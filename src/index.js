@@ -110,7 +110,7 @@ const globalCurrentProject = () => {
 }
 
 globalCurrentProject.currentProject = defaultProject;
-console.log(defaultLibrary);
+// console.log(defaultLibrary);
 // // add default project to default library
 // defaultLibrary.addProject(defaultProject);
 
@@ -325,32 +325,6 @@ const eraseTaskFormInputValues = () => {
 const todayDate = new Date();
 const todayDateConverted = dateConvert(todayDate);
 
-// // // create another project 
-// const anothertProject = new Project('Another Project');
-
-// // // create another task 
-// const anotherTask = new itemFactory('another task', 'TASK DESCRIPTION', '11/11/2022', 'high', 'SOME notes')
-
-// // // add a first task to default project 
-// defaultProject.addTask(anotherTask);
-
-// // create default library
-// const defaultLibrary = new ProjectLibrary();
-
-// // add default project to default library
-// defaultLibrary.addProject(anothertProject);
-
-// createTaskVisual(defaultProject.tasks[1]);
-
-// appendProjectToProjectList(anothertProject);
-
-// const anotherNewTask = new itemFactory('another new task', ' VERY GOOD TASK DESCRIPTION', '14/11/2022', 'high', 'SOME notes');
-
-// anothertProject.addTask(anotherNewTask);
-// createTaskVisual(anothertProject.tasks[0]);
-
-
-
 // tests if it's equals to today date to show on screen 
 function checkDueDate (c) {
     if(c.dueDate === todayDateConverted){
@@ -425,7 +399,8 @@ upcomingSelector.addEventListener('click', function()  {
     // console.log(defaultLibrary.projects.length);
 
 const createVisualProjects = (defaultLibrary) => {
-    defaultLibrary.projects.forEach(e => appendProjectToProjectList(e))
+    // defaultLibrary.projects.forEach(e => appendProjectToProjectList(e))
+    defaultLibrary.projects.forEach(e => console.log(e))
 }
 
 // const createVisualTasks = (something) => {
@@ -437,10 +412,13 @@ const createVisualProjects = (defaultLibrary) => {
 
 // createVisualTasks(globalCurrentProject.currentProject);
 // console.log(globalCurrentProject.currentProject);
+console.log(defaultLibrary);
+createVisualProjects(defaultLibrary);
 
 const onPageLoad = () => {
+    createVisualProjects(defaultLibrary);
+        // console.log('what to do');
 
-        console.log('what to do');
         // localSave();
         // console.log(defaultLibrary.projects.length)
         // if (defaultLibrary.projects.length === 0) {
