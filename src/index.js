@@ -61,10 +61,10 @@ class Project {
 const defaultProject = new Project('Default');
 
 // create first task 
-const learnCode = new itemFactory('learn code', 'JavaScript, HTML, CSS', '10/11/2022', 'high', 'already doing it')
+// const learnCode = new itemFactory('learn code', 'JavaScript, HTML, CSS', '10/11/2022', 'high', 'already doing it')
 
 // add a first task to default project 
-defaultProject.addTask(learnCode);
+// defaultProject.addTask(learnCode);
 
 // project library class
 class ProjectLibrary {
@@ -92,13 +92,27 @@ class ProjectLibrary {
 // create default library
 const defaultLibrary = new ProjectLibrary();
 
+const localSave = () => {
+    window.localStorage.setItem('firstLoad', JSON.stringify(defaultLibrary));
+}
+
+const localLoad = () => {
+    var localDefaultLibraryString = JSON.parse(window.localStorage.getItem('firstLoad'));
+    Object.assign(defaultLibrary, localDefaultLibraryString);
+    globalThis.localDefaultLibraryString;
+}
+
+localLoad();
+
 // current project
 const globalCurrentProject = () => {
     var currentProject = defaultProject;
 }
 
-// add default project to default library
-defaultLibrary.addProject(defaultProject);
+globalCurrentProject.currentProject = defaultProject;
+console.log(defaultLibrary);
+// // add default project to default library
+// defaultLibrary.addProject(defaultProject);
 
 // append project to project list 
 function appendProjectToProjectList (element) {
@@ -113,6 +127,11 @@ function appendProjectToProjectList (element) {
     projectTrashCan.addEventListener('click', () => {
         let projectToBeDeletedTitle = projectTrashCan.parentElement.firstChild.textContent;
         defaultLibrary.removeProject(projectToBeDeletedTitle);
+
+        // saves local library after it removes a project 
+        // localLoad()
+        localSave();
+
         projectTrashCan.parentElement.remove();
         if (projectToBeDeletedTitle === globalCurrentProject.currentProject.projectTitle){
             projectTitle.innerHTML = '';
@@ -143,8 +162,8 @@ function appendProjectToProjectList (element) {
 
 }
 
-// append default project to projects list 
-appendProjectToProjectList(defaultProject);
+// // append default project to projects list 
+// appendProjectToProjectList(defaultProject);
 
 // add project from form 
 createProjectBtn.addEventListener('click', () => {
@@ -156,6 +175,10 @@ createProjectBtn.addEventListener('click', () => {
     }
     defaultLibrary.addProject(createNewProject);
     appendProjectToProjectList(createNewProject);
+
+    // tests if it's saving new projects on localSave 
+    localSave();
+    // localSave();
  
     // closes project form 
     projectForm.style.display = 'none';
@@ -239,17 +262,13 @@ const createTaskVisual = (item) => {
 
     const trashCan = document.createElement('i');
     trashCan.addEventListener('click', () => {
-    let taskTitle = trashCan.parentElement.firstChild.textContent;
-    // console.log(taskTitle);
-    globalCurrentProject.currentProject.removeTask(taskTitle);
-    trashCan.parentElement.remove();
-
+        let taskTitle = trashCan.parentElement.firstChild.textContent;
+        globalCurrentProject.currentProject.removeTask(taskTitle);
+        trashCan.parentElement.remove();
+        localSave();
     });
     trashCan.className = 'fa-solid fa-trash';
     taskCard.appendChild(trashCan);
-
-
-
     boxContainer.appendChild(taskCard);
 }
 
@@ -259,7 +278,7 @@ const createTaskFromProjectTasks = () => {
 }
 
 // create default task on screen 
-createTaskVisual(defaultProject.tasks[0]);
+// createTaskVisual(defaultProject.tasks[0]);
 
 // task form create button action 
 taskCreatBtn.addEventListener('click', formCreateBtn);
@@ -306,29 +325,29 @@ const eraseTaskFormInputValues = () => {
 const todayDate = new Date();
 const todayDateConverted = dateConvert(todayDate);
 
-// // create default project 
-const anothertProject = new Project('Another Project');
+// // // create another project 
+// const anothertProject = new Project('Another Project');
 
-// // create first task 
-const anotherTask = new itemFactory('another task', 'TASK DESCRIPTION', '11/11/2022', 'high', 'SOME notes')
+// // // create another task 
+// const anotherTask = new itemFactory('another task', 'TASK DESCRIPTION', '11/11/2022', 'high', 'SOME notes')
 
-// // add a first task to default project 
-defaultProject.addTask(anotherTask);
+// // // add a first task to default project 
+// defaultProject.addTask(anotherTask);
 
 // // create default library
 // const defaultLibrary = new ProjectLibrary();
 
 // // add default project to default library
-defaultLibrary.addProject(anothertProject);
+// defaultLibrary.addProject(anothertProject);
 
-createTaskVisual(defaultProject.tasks[1]);
+// createTaskVisual(defaultProject.tasks[1]);
 
-appendProjectToProjectList(anothertProject);
+// appendProjectToProjectList(anothertProject);
 
-const anotherNewTask = new itemFactory('another new task', ' VERY GOOD TASK DESCRIPTION', '14/11/2022', 'high', 'SOME notes');
+// const anotherNewTask = new itemFactory('another new task', ' VERY GOOD TASK DESCRIPTION', '14/11/2022', 'high', 'SOME notes');
 
-anothertProject.addTask(anotherNewTask);
-createTaskVisual(anothertProject.tasks[0]);
+// anothertProject.addTask(anotherNewTask);
+// createTaskVisual(anothertProject.tasks[0]);
 
 
 
@@ -403,9 +422,69 @@ upcomingSelector.addEventListener('click', function()  {
     loopThroughProjectsWeek();
 });
 
+    // console.log(defaultLibrary.projects.length);
 
-// console.log(defaultLibrary.projects);
-// defaultLibrary.removeProject("Another Project");
-// console.log(defaultLibrary.projects);
-// defaultProject.removeTask('learn code');
-// console.log(defaultProject.tasks[0].title);
+const createVisualProjects = (defaultLibrary) => {
+    defaultLibrary.projects.forEach(e => appendProjectToProjectList(e))
+}
+
+// const createVisualTasks = (something) => {
+//     if(something === undefined){
+//         something = defaultProject;
+//         something.tasks.forEach(e => createTaskVisual(e))
+//     }
+// }
+
+// createVisualTasks(globalCurrentProject.currentProject);
+// console.log(globalCurrentProject.currentProject);
+
+const onPageLoad = () => {
+
+        console.log('odeio minha vida');
+        // localSave();
+        // console.log(defaultLibrary.projects.length)
+        // if (defaultLibrary.projects.length === 0) {
+        // // create default project 
+        // // const defaultProject = new Project('Default');
+        // // create first task 
+        // const learnCode = new itemFactory('learn code', 'JavaScript, HTML, CSS', '10/11/2022', 'high', 'already doing it')
+        // // add a first task to default project 
+        // defaultProject.addTask(learnCode);
+        // // add default project to default library
+        // defaultLibrary.addProject(defaultProject);
+        // // add default project on screen 
+        // // appendProjectToProjectList(defaultProject);
+        // // create default task on screen 
+        // // createTaskVisual(defaultProject.tasks[0]);
+        // // create another project 
+        // const anothertProject = new Project('Another Project');
+        // // create another task 
+        // const anotherTask = new itemFactory('another task', 'TASK DESCRIPTION', '11/11/2022', 'high', 'SOME notes')
+        // // add a second task to default project 
+        // defaultProject.addTask(anotherTask);
+        // //add another project to default projects library
+        // defaultLibrary.addProject(anothertProject);
+        // //creates another task on screen
+        // // createTaskVisual(defaultProject.tasks[1]);
+        // //add another project on screen
+        // // appendProjectToProjectList(anothertProject);
+        // //create a task for 'another project'
+        // const anotherNewTask = new itemFactory('another new task', ' VERY GOOD TASK DESCRIPTION', '14/11/2022', 'high', 'SOME notes');
+        // //add anotherNewTask to another project object
+        // anothertProject.addTask(anotherNewTask);
+        // //creates anotherNewTask on screen
+        // // console.log(anothertProject.tasks[0]);
+        // // createTaskVisual(anothertProject.tasks[0]);
+        // // console.log(defaultLibrary.projects.length)
+        // console.log(globalCurrentProject.currentProject.tasks)
+        // createTaskFromProjectTasks();        
+        // createVisualProjects(defaultLibrary);
+
+        // return localSave();
+        // }
+    
+    // createVisualProjects()
+
+    }
+
+onPageLoad();
