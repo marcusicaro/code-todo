@@ -193,8 +193,12 @@ const appendTaskToCurrentProject = (el) => {
 // convert date 
 const convertDate = (dateElement) => {
     if (dateElement !== ''){
-        const newDateFormat = new Date(dateElement);
+        const resetDate = `${dateElement}T00:00:00`
+        console.log(resetDate)
+        const newDateFormat = new Date(resetDate);
+        // console.log(newDateFormat);
         const dateFormated = dateConvert(newDateFormat);
+        // console.log(dateFormated);
         return dateFormated
     } else {
         return ''
@@ -209,7 +213,9 @@ const createTask = () => {
     const getTitleInput = document.querySelector('#title').value;
     const getDescriptionInput = document.querySelector("#set-description").value;
     const getDueDate = document.querySelector('#duedate').value;
+    // console.log(getDueDate);
     const dueDateConverted = convertDate(getDueDate);
+    // console.log(dueDateConverted);
     const getPriorityInput = document.querySelector('#set-priority').value;
     const getNotesValue = document.querySelector('#note').value;
 
@@ -324,12 +330,33 @@ const eraseTaskFormInputValues = () => {
     }
  };
 
+
+
+const createVisualProjects = (defaultLibrary) => {
+    defaultLibrary.projects.forEach(e => appendProjectToProjectList(e))
+    defaultLibrary.projects.forEach((project) => {
+        const proto = Object.getPrototypeOf(defaultProject);
+        Object.setPrototypeOf(project, proto);
+    });
+}
+
+function onPageLoad () {
+        localLoad()
+        createVisualProjects(defaultLibrary);
+        for(var i = 0; i < defaultLibrary.projects[0].tasks.length; i++){
+        createTaskVisual(defaultLibrary.projects[0].tasks[i]);
+        }
+}
+
+onPageLoad();
+
 //  get today date 
 const todayDate = new Date();
 const todayDateConverted = dateConvert(todayDate);
 
 // tests if it's equals to today date to show on screen 
 function checkDueDate (c) {
+    // console.log(todayDateConverted);
     if(c.dueDate === todayDateConverted){
         createTaskVisual(c);
     }
@@ -337,13 +364,16 @@ function checkDueDate (c) {
 
 // loop through tasks 
 const loopThroughTasks = (projectWithTasks) => {
+    // console.log(projectWithTasks.tasks[0])
     projectWithTasks.tasks.forEach(element => checkDueDate(element));
 }
 
 // loop through each project of the projectlibrary 
 const loopThroughProjects = () => {
     for(var i = 0; i < defaultLibrary.projects.length; i++){
+        // console.log(defaultLibrary.projects[i])
         loopThroughTasks(defaultLibrary.projects[i]);
+        // console.log('asd')
     }
 } 
 
@@ -398,24 +428,3 @@ upcomingSelector.addEventListener('click', function()  {
     emptyBoxContainer();
     loopThroughProjectsWeek();
 });
-
-const createVisualProjects = (defaultLibrary) => {
-    defaultLibrary.projects.forEach(e => appendProjectToProjectList(e))
-    defaultLibrary.projects.forEach((project) => {
-        const proto = Object.getPrototypeOf(defaultProject);
-        Object.setPrototypeOf(project, proto);
-    });
-}
-
-const createEachItemAgainOnScreen = () => {
-    
-}
-
-function onPageLoad () {
-        localLoad()
-        // console.log(defaultLibrary.projects[0].projectTitle);
-        createVisualProjects(defaultLibrary);
-        createTaskVisual(defaultLibrary.projects[0].tasks[0]);
-}
-
-onPageLoad();
