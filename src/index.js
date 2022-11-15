@@ -97,19 +97,18 @@ const localSave = () => {
 }
 
 const localLoad = () => {
+    let localDefaultLibrary = window.localStorage.getItem("myObject");
     var localDefaultLibraryString = JSON.parse(window.localStorage.getItem('firstLoad'));
     Object.assign(defaultLibrary, localDefaultLibraryString);
     globalThis.localDefaultLibraryString;
 }
-
-localLoad();
 
 // current project
 const globalCurrentProject = () => {
     var currentProject = defaultProject;
 }
 
-globalCurrentProject.currentProject = defaultProject;
+// globalCurrentProject.currentProject = defaultProject;
 // console.log(defaultLibrary);
 // // add default project to default library
 // defaultLibrary.addProject(defaultProject);
@@ -203,6 +202,9 @@ const convertDate = (dateElement) => {
     }
 }
 
+// globalCurrentProject.currentProject.addTask('ASDASD');
+// console.log(globalCurrentProject.currentProject)
+
 // add task from form to current project
 const createTask = () => {
     const getTitleInput = document.querySelector('#title').value;
@@ -219,6 +221,8 @@ const createTask = () => {
 
     var newItem = new itemFactory(getTitleInput, getDescriptionInput, dueDateConverted, getPriorityInput, getNotesValue);
     
+    // console.log(globalCurrentProject.currentProject);
+
     if (globalCurrentProject.currentProject.alreadyExists(newItem)){
         return alert('Task name already in use, please choose a different one.');
     }
@@ -396,73 +400,16 @@ upcomingSelector.addEventListener('click', function()  {
     loopThroughProjectsWeek();
 });
 
-    // console.log(defaultLibrary.projects.length);
-
 const createVisualProjects = (defaultLibrary) => {
-    // defaultLibrary.projects.forEach(e => appendProjectToProjectList(e))
-    defaultLibrary.projects.forEach(e => console.log(e))
+    defaultLibrary.projects.forEach(e => appendProjectToProjectList(e))
+    defaultLibrary.projects = defaultLibrary.projects.map((project) => {return Object.create(Project.prototype, {projectTitle: project.projectTitle, tasks: project.tasks })})
 }
 
-// const createVisualTasks = (something) => {
-//     if(something === undefined){
-//         something = defaultProject;
-//         something.tasks.forEach(e => createTaskVisual(e))
-//     }
-// }
-
-// createVisualTasks(globalCurrentProject.currentProject);
-// console.log(globalCurrentProject.currentProject);
-console.log(defaultLibrary);
-createVisualProjects(defaultLibrary);
-
-const onPageLoad = () => {
-    createVisualProjects(defaultLibrary);
-        // console.log('what to do');
-
-        // localSave();
-        // console.log(defaultLibrary.projects.length)
-        // if (defaultLibrary.projects.length === 0) {
-        // // create default project 
-        // // const defaultProject = new Project('Default');
-        // // create first task 
-        // const learnCode = new itemFactory('learn code', 'JavaScript, HTML, CSS', '10/11/2022', 'high', 'already doing it')
-        // // add a first task to default project 
-        // defaultProject.addTask(learnCode);
-        // // add default project to default library
-        // defaultLibrary.addProject(defaultProject);
-        // // add default project on screen 
-        // // appendProjectToProjectList(defaultProject);
-        // // create default task on screen 
-        // // createTaskVisual(defaultProject.tasks[0]);
-        // // create another project 
-        // const anothertProject = new Project('Another Project');
-        // // create another task 
-        // const anotherTask = new itemFactory('another task', 'TASK DESCRIPTION', '11/11/2022', 'high', 'SOME notes')
-        // // add a second task to default project 
-        // defaultProject.addTask(anotherTask);
-        // //add another project to default projects library
-        // defaultLibrary.addProject(anothertProject);
-        // //creates another task on screen
-        // // createTaskVisual(defaultProject.tasks[1]);
-        // //add another project on screen
-        // // appendProjectToProjectList(anothertProject);
-        // //create a task for 'another project'
-        // const anotherNewTask = new itemFactory('another new task', ' VERY GOOD TASK DESCRIPTION', '14/11/2022', 'high', 'SOME notes');
-        // //add anotherNewTask to another project object
-        // anothertProject.addTask(anotherNewTask);
-        // //creates anotherNewTask on screen
-        // // console.log(anothertProject.tasks[0]);
-        // // createTaskVisual(anothertProject.tasks[0]);
-        // // console.log(defaultLibrary.projects.length)
-        // console.log(globalCurrentProject.currentProject.tasks)
-        // createTaskFromProjectTasks();        
-        // createVisualProjects(defaultLibrary);
-
-        // return localSave();
-        // }
-    
-    // createVisualProjects()
-
-    }
+function onPageLoad () {
+        console.log(defaultLibrary)
+        localLoad()
+        createVisualProjects(defaultLibrary);
+        console.log(globalCurrentProject.currentProject);
+}
 
 onPageLoad();
