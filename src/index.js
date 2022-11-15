@@ -93,12 +93,11 @@ class ProjectLibrary {
 const defaultLibrary = new ProjectLibrary();
 
 const localSave = () => {
-    window.localStorage.setItem('firstLoad', JSON.stringify(defaultLibrary));
+    localStorage.setItem('firstLoad', JSON.stringify(defaultLibrary));
 }
 
 const localLoad = () => {
-    let localDefaultLibrary = window.localStorage.getItem("myObject");
-    var localDefaultLibraryString = JSON.parse(window.localStorage.getItem('firstLoad'));
+    var localDefaultLibraryString = JSON.parse(localStorage.getItem('firstLoad'));
     Object.assign(defaultLibrary, localDefaultLibraryString);
     globalThis.localDefaultLibraryString;
 }
@@ -228,7 +227,6 @@ const createTask = () => {
     }
 
     appendTaskToCurrentProject(newItem);
-
     createTaskVisual(newItem);
 }
 
@@ -274,6 +272,7 @@ const createTaskVisual = (item) => {
     trashCan.className = 'fa-solid fa-trash';
     taskCard.appendChild(trashCan);
     boxContainer.appendChild(taskCard);
+    localSave();
 }
 
 // // create task from project
@@ -402,14 +401,21 @@ upcomingSelector.addEventListener('click', function()  {
 
 const createVisualProjects = (defaultLibrary) => {
     defaultLibrary.projects.forEach(e => appendProjectToProjectList(e))
-    defaultLibrary.projects = defaultLibrary.projects.map((project) => {return Object.create(Project.prototype, {projectTitle: project.projectTitle, tasks: project.tasks })})
+    defaultLibrary.projects.forEach((project) => {
+        const proto = Object.getPrototypeOf(defaultProject);
+        Object.setPrototypeOf(project, proto);
+    });
+}
+
+const createEachItemAgainOnScreen = () => {
+    
 }
 
 function onPageLoad () {
-        console.log(defaultLibrary)
         localLoad()
+        // console.log(defaultLibrary.projects[0].projectTitle);
         createVisualProjects(defaultLibrary);
-        console.log(globalCurrentProject.currentProject);
+        createTaskVisual(defaultLibrary.projects[0].tasks[0]);
 }
 
 onPageLoad();
