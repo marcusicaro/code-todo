@@ -440,7 +440,7 @@ const createVisualProjects = (defaultLibrary) => {
 
 const onPageLoad = () => {
 
-        console.log('odeio minha vida');
+        console.log('what to do');
         // localSave();
         // console.log(defaultLibrary.projects.length)
         // if (defaultLibrary.projects.length === 0) {
