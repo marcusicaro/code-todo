@@ -342,6 +342,24 @@ const createVisualProjects = (defaultLibrary) => {
 
 function onPageLoad () {
         localLoad()
+        if(defaultLibrary.projects.length === 0) {
+        // create first task 
+        const learnCode = new itemFactory('learn code', 'JavaScript, HTML, CSS', '10/11/2022', 'high', 'already doing it');
+
+        // add a first task to default project 
+        defaultProject.addTask(learnCode);
+
+        //add defaultProject to defaultLibrary
+        defaultLibrary.addProject(defaultProject);
+
+        // show defaultProject on screen 
+        // appendProjectToProjectList(defaultProject);
+
+        // show learnCode on screen 
+        createTaskVisual(learnCode);
+
+        // console.log('ASDASD')
+        }
         createVisualProjects(defaultLibrary);
         for(var i = 0; i < defaultLibrary.projects[0].tasks.length; i++){
         createTaskVisual(defaultLibrary.projects[0].tasks[i]);
@@ -381,6 +399,7 @@ const todaySelector = document.querySelector('#today');
 const changeTodaySelectorCursor = (() => {return todaySelector.style.cursor = 'pointer';})();
 
 todaySelector.addEventListener('click', function()  {
+    projectTitle.textContent = 'Today';
     emptyBoxContainer();
     loopThroughProjects();
 });
@@ -425,6 +444,7 @@ const upcomingSelector = document.querySelector('#upcoming');
 const changeUpcomingSelectorCursor = (() => {return upcomingSelector.style.cursor = 'pointer';})();
 
 upcomingSelector.addEventListener('click', function()  {
+    projectTitle.textContent = 'Upcoming';
     emptyBoxContainer();
     loopThroughProjectsWeek();
 });
